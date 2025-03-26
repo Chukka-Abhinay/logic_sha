@@ -73,13 +73,13 @@ async function register() {
   
       // 4. Send request
       const response = await fetch('http://localhost/LoginPage/LoginPage/server/register.php', {
-        method: 'POST',
-        mode: 'cors',  // Explicitly enable CORS
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, R1, R2, key })
-    });
+    method: 'POST',
+    mode: 'cors',  // Explicitly enable CORS
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, R1, R2, key })
+});
   
       // 5. Handle response
       if (!response.ok) {
@@ -110,22 +110,69 @@ function clearRegistrationFields() {
     document.getElementById('registerContext').value = '';
 }
   // Login Function
-async function login() {
+  async function login() {
     const email = document.getElementById('loginEmail').value;
     const p = document.getElementById('loginPassword').value;
     const c = document.getElementById('loginContext').value;
-  
-    const { R1, R2, key } = await computeHashes(p, email, c);
-  
-    // Send data to server for login verification
-    const response = await fetch('../server/login.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, R1, R2, key })
-    });
-  
-    const result = await response.json();
-console.log(result);
-alert(result.message);
+
+    // Client-side validation
+    if (!validateEmail(email)) {
+        alert('Invalid email format');
+        return;
+    }
+
+    if (!p || !c) {
+        alert('Password and Context are required');
+        return;
+    }
+
+    try {
+        // 1. Compute hashes
+        const { R1, R2, key } = await computeHashes(p, email, c);
+        
+        // 2. Debugging logs
+        console.log('Login Hashes:', { R1, R2, key });
+
+        // 3. Send request - Note the corrected path
+        const response = await fetch('http://localhost/LoginPage/LoginPage/server/login.php', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email,
+                R1: R1,
+                R2: R2,
+                key: key
+            })
+        });
+
+        // 4. Handle empty responses
+        if (response.status === 204) {
+            return;
+        }
+
+        // 5. Parse response safely
+        const result = await response.json();
+        console.log('Login Response:', result);
+        
+        // Modified success check
+        if (response.ok && result.message === 'Login successful!') {
+            alert('Login successful!');
+            clearLoginFields();
+        } else {
+            throw new Error(result.message || 'Authentication failed');
+        }
+
+    } catch (error) {
+        console.error('Login Error:', error);
+        alert(`Login failed: ${error.message}`);
+    }
 }
-  
+
+function clearLoginFields() {
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    document.getElementById('loginContext').value = '';
+}

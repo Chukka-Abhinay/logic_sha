@@ -41,7 +41,7 @@ async function computeHashes(p, email, c) {
   function showLogin() {
     document.getElementById('registerForm').style.display = 'none';
     document.getElementById('loginForm').style.display = 'block';
-  }
+}
   
   // Registration Function
 async function register() {
@@ -92,7 +92,7 @@ async function register() {
       
       if (result.success) {
         alert('Registration successful! Please login');
-        showForm('login');  // Switch to login form
+        showLogin()  // Switch to login form
         clearRegistrationFields();
       } else {
         throw new Error(result.message || 'Unknown error');

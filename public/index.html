@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Login Form -->
+    <div id="loginForm">
+      <h2>Login</h2>
+      <input type="email" placeholder="Email" id="loginEmail" required>
+      <input type="password" placeholder="Password" id="loginPassword" required>
+      <input type="password" placeholder="Context" id="loginContext" required>
+      <button onclick="login()">Login</button>
+      <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+    </div>
+    <!-- Registration Form -->
+    <div id="registerForm" style="display:none;">
+      <h2>Register</h2>
+      <input type="email" placeholder="Email" id="registerEmail" required>
+      <input type="password" placeholder="Password" id="registerPassword" required>
+      <input type="password" placeholder="Context" id="registerContext" required>
+      <button onclick="register()">Register</button>
+      <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+    </div>
+  </div>
+  <script src="api.js"></script>
+</body>
+</html>
